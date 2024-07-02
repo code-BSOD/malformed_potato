@@ -48,8 +48,18 @@ Lower Spectral Entropy means smoother, more regular eliptical shape while higher
 
 
 #### Table Transposed
-| Class      | No of Imgs | Max ER | Min ER | Avg ER | Median ER | Max PF | Min PF | Avg PF | Median PF | Max SE | Min SE | Avg SE | Median SE |
-|------------|------------|--------|--------|--------|-----------|--------|--------|--------|-----------|--------|--------|--------|-----------|
-| Good       | 119        | 0.90   | 0.79   | 0.86   | 0.87      | 0      | 0      | 0      | 0         | 2.53   | 1.36   | 1.79   | 1.76      |
-| Bottleneck | 59         | 0.81   | 0.74   | 0.78   | 0.77      | 0      | 0      | 0      | 0         | 2.88   | 2.22   | 2.49   | 2.49      |
-| Ugly       | 67         | 0.85   | 0.75   | 0.81   | 0.82      | 0      | 0      | 0      | 0         | 2.94   | 1.85   | 2.28   | 2.23      |
+| Class      | Good | Bottleneck | Ugly |
+|------------|------|------------|------|
+| No of Imgs | 119  | 59         | 67   |
+| Max ER     | 0.90 | 0.81       | 0.85 |
+| Min ER     | 0.79 | 0.74       | 0.75 |
+| Avg ER     | 0.86 | 0.78       | 0.81 |
+| Median ER  | 0.87 | 0.77       | 0.82 |
+| Max PF     | 0    | 0          | 0    |
+| Min PF     | 0    | 0          | 0    |
+| Avg PF     | 0    | 0          | 0    |
+| Median PF  | 0    | 0          | 0    |
+| Max SE     | 2.53 | 2.88       | 2.94 |
+| Min SE     | 1.36 | 2.22       | 1.85 |
+| Avg SE     | 1.79 | 2.49       | 2.28 |
+| Median SE  | 1.76 | 2.49       | 2.23 |
