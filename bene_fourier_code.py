@@ -31,8 +31,10 @@ def process_image_and_calculate_dft(image_path, target_length=256):
     cy = int(M['m01'] / M['m00'])
     potato_contour = potato_contour.squeeze()
     distances = np.sqrt((potato_contour[:, 0] - cx) ** 2 + (potato_contour[:, 1] - cy) ** 2)
+    from scipy.interpolate import interp1d
+    
     x_old = np.linspace(0, 1, len(distances))
-    f = interpd(x_old, distances, kind='linear')
+    f = interp1d(x_old, distances, kind='linear')
     x_new = np.linspace(0, 1, target_length)
     distances_interpolated = f(x_new)
 
@@ -40,7 +42,7 @@ def process_image_and_calculate_dft(image_path, target_length=256):
     max_distance = np.max(distances_interpolated)
     distances_normalized = (distances_interpolated / max_distance) * 250
 
-    dft_result = fft(distances_normalized)
+    dft_result = np.fft(distances_normalized)
     #dft_result = fft(distances_interpolated)
     dft_magnitude = np.abs(dft_result)
     return dft_magnitude
