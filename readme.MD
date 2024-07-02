@@ -15,7 +15,7 @@ Classes: Good, Malformed
 
 
 ## Three Class classification Results
-Classes: Good, Bottleneck, Ugle
+Classes: Good, Bottleneck, Ugly
 
 | Class | Color | Split Ratio | Val. Error Rate | Val. Accuracy | Start LR | Optimal LR             | Epochs |
 |-------|-------|-------------|-----------------|---------------|----------|------------------------|--------|
