@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from scipy.interpolate import interp1d
 from pyefd import elliptic_fourier_descriptors
 
 def process_image_and_calculate_dft(image_path, target_length=256):
@@ -31,7 +32,6 @@ def process_image_and_calculate_dft(image_path, target_length=256):
     cy = int(M['m01'] / M['m00'])
     potato_contour = potato_contour.squeeze()
     distances = np.sqrt((potato_contour[:, 0] - cx) ** 2 + (potato_contour[:, 1] - cy) ** 2)
-    from scipy.interpolate import interp1d
     
     x_old = np.linspace(0, 1, len(distances))
     f = interp1d(x_old, distances, kind='linear')
