@@ -30,13 +30,13 @@ Classes: Good, Bottleneck, Ugly
 
 
 ## Fourier Transoformation Interpretation Results
-ER = Energy Ratio
-PF = Peak Frequency
-SE = Spectral Entropy
+1. ER = Energy Ratio
+2. PF = Peak Frequency
+3. SE = Spectral Entropy
 
-Generally High Energy Ratio like > 0.80 suggests a smooth, elliptical shape
-Low Peak Frequencey of < 5 suggests high low frequency components, meaning irregular shapes
-Lower Spectral Entropy means smoother, more regular eliptical shape while higher spectral entropy corresponds to complex, irregular shapes.
+* Generally High Energy Ratio like > 0.80 suggests a smooth, elliptical shape
+* Low Peak Frequencey of < 5 suggests high low frequency components, meaning irregular shapes
+* Lower Spectral Entropy (SE) means smoother, more regular eliptical shape while higher spectral entropy corresponds to complex, irregular shapes.
 
 
 
