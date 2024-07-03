@@ -6,6 +6,8 @@ from sklearn.decomposition import PCA
 from pyefd import elliptic_fourier_descriptors
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+import time
+
 
 def read_images_and_extract_contours(folder_path):
     """Read images from a folder and extract their largest external contour."""
@@ -84,7 +86,7 @@ def inverse_fourier_transform(coeffs, num_points=500, H=30):
 
 
 
-def main(folder_path, n_clusters=4, order=30):
+def main(folder_path, n_clusters=36, order=30):
     contours = read_images_and_extract_contours(folder_path)
     # Compute Fourier coefficients and flatten them into a 1D array per contour
     fourier_descriptors = [compute_fourier_coefficients(contour, order=order).flatten() for contour in contours]
@@ -98,7 +100,7 @@ def main(folder_path, n_clusters=4, order=30):
         class_averages = compute_class_averages(fourier_descriptors, labels, n_clusters)
 
         # Determine subplot grid size
-        cols = min(n_clusters, 4)
+        cols = min(n_clusters, 12)
         rows = n_clusters // cols + (n_clusters % cols > 0)
 
         # Plot individual clusters in subplots
@@ -132,5 +134,8 @@ def main(folder_path, n_clusters=4, order=30):
 
 
 if __name__ == "__main__":
-    folder_path = r"C:\Users\admin\Karevo\Karevo - Dokumente\01_Technik\Images-Videos\ProcessedData\240212_ single_defects\malformed"
+    folder_path = r"/Users/mishkat/Documents/malformed"
+    start = time.time()
     main(folder_path)
+    end = time.time()  
+    print(f"Time taken: {end - start:.2f} seconds")
