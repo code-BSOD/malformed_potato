@@ -4,7 +4,8 @@ import os
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 from pyefd import elliptic_fourier_descriptors
-from sklearn.cluster import KMeans
+# from sklearn.cluster import DBSCAN
+from sklearn.mixture import GaussianMixture
 import matplotlib.pyplot as plt
 import time
 
@@ -69,8 +70,12 @@ def inverse_fourier_transform(coeffs, num_points=500, H=30):
 
     # Ensure we have more than one descriptor to fit KMeans
     if fourier_descriptors.shape[0] > 1:
-        kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(fourier_descriptors)
-        class_averages = compute_class_averages(fourier_descriptors, kmeans.labels_, n_clusters)
+        # kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(fourier_descriptors)
+        # dbscans = DBSCAN(eps=0.5, min_samples=5).fit(fourier_descriptors)
+        gmm = GaussianMixture(n_components=36, covariance_type='full', random_state=0).fit(fourier_descriptors)
+        # class_averages = compute_class_averages(fourier_descriptors, kmeans.labels_, n_clusters)
+        # class_averages = compute_class_averages(fourier_descriptors, dbscans.labels_, len(set(dbscans.labels_)))
+        class_averages = compute_class_averages(fourier_descriptors, gmm.labels_, 8)
 
         # Plot average shapes
         for i, avg_coeffs in enumerate(class_averages):
@@ -86,35 +91,31 @@ def inverse_fourier_transform(coeffs, num_points=500, H=30):
 
 
 
-def main(folder_path, n_clusters=36, order=30):
+def main(folder_path, n_components=36, order=30):  
     contours = read_images_and_extract_contours(folder_path)
-    # Compute Fourier coefficients and flatten them into a 1D array per contour
-    fourier_descriptors = [compute_fourier_coefficients(contour, order=order).flatten() for contour in contours]
-
-    # Convert list of 1D arrays into a 2D array for KMeans
-    fourier_descriptors = np.array(fourier_descriptors)
+    fourier_descriptors = np.array([compute_fourier_coefficients(c, order).flatten() for c in contours])
 
     if fourier_descriptors.shape[0] > 1:
-        kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(fourier_descriptors)
-        labels = kmeans.labels_
-        class_averages = compute_class_averages(fourier_descriptors, labels, n_clusters)
+        # GMM clustering
+        gmm = GaussianMixture(n_components=n_components, covariance_type='full', random_state=0).fit(fourier_descriptors)
+        labels = gmm.predict(fourier_descriptors)  # Get cluster assignments
 
-        # Determine subplot grid size
-        cols = min(n_clusters, 12)
-        rows = n_clusters // cols + (n_clusters % cols > 0)
-
-        # Plot individual clusters in subplots
+        # Plot individual clusters
+        unique_labels = set(labels)
+        cols = min(len(unique_labels), 12)
+        rows = len(unique_labels) // cols + (len(unique_labels) % cols > 0)
         fig, axes = plt.subplots(rows, cols, figsize=(15, rows * 3.75))
-        axes = axes.flatten() if n_clusters > 1 else [axes]
+        axes = axes.flatten() if len(unique_labels) > 1 else [axes]
 
-        for i, avg_coeffs in enumerate(class_averages):
-            if avg_coeffs is not None:
-                shape_model = inverse_fourier_transform(avg_coeffs.reshape(order, -1), H=order)
-                ax = axes[i]
-                ax.plot(shape_model[:, 0], shape_model[:, 1], label=f'Cluster {i + 1}')
-                ax.set_title(f'Cluster {i + 1}')
-                ax.axis('equal')
-                ax.legend()
+        for i, label in enumerate(unique_labels):
+            cluster_mask = (labels == label)
+            cluster_descriptors = fourier_descriptors[cluster_mask]
+            avg_coeffs = cluster_descriptors.mean(axis=0)
+            shape_model = inverse_fourier_transform(avg_coeffs.reshape(order, -1), H=order)
+            ax = axes[i]
+            ax.plot(shape_model[:, 0], shape_model[:, 1])
+            ax.set_title(f'Cluster {label + 1}')
+            ax.axis('equal')
 
         # Adjust layout
         plt.tight_layout()
@@ -122,16 +123,20 @@ def main(folder_path, n_clusters=36, order=30):
 
         # Plot all clusters together
         plt.figure(figsize=(8, 6))
-        for avg_coeffs in class_averages:
-            if avg_coeffs is not None:
-                shape_model = inverse_fourier_transform(avg_coeffs.reshape(order, -1), H=order)
-                plt.plot(shape_model[:, 0], shape_model[:, 1])
-        plt.axis('equal')
-        plt.title('All Clusters Combined')
+        colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
+        for k, col in zip(unique_labels, colors):
+            class_member_mask = (labels == k)
+            xy = fourier_descriptors[class_member_mask]
+            for coeffs in xy:
+                shape_model = inverse_fourier_transform(coeffs.reshape(order, -1), H=order)
+                plt.plot(shape_model[:, 0], shape_model[:, 1], 'o', markerfacecolor=tuple(col),
+                         markeredgecolor='k', markersize=6, label=f'Cluster {k + 1}')
+
+        plt.title('All Clusters (GMM)')
+        plt.legend()
         plt.show()
     else:
-        print("Not enough contours for KMeans clustering.")
-
+        print("Not enough contours for GMM clustering.")
 
 if __name__ == "__main__":
     folder_path = r"/home/mishkat/Documents/malformed"
