@@ -126,7 +126,7 @@ def old_main(folder_path, n_clusters=36, order=30):
         print("Not enough contours for KMeans clustering.")
 
 def plot_predicted_clusters(predicted_cluster, avg_shape, image_to_predict_path):
-    
+    plt.ion()
     fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 
     # Show the image
@@ -141,14 +141,14 @@ def plot_predicted_clusters(predicted_cluster, avg_shape, image_to_predict_path)
     axes[1].axis('equal')
     axes[1].set_aspect('equal')
 
-    # plt.show(block=True)
+    plt.show()
     # plt.pause(2)
     # plt.waitforbuttonpress()
     # plt.close(fig)
     # plt.pause(0.1)
-    plt.ion()
+    
 
-    fig.savefig(f'predicted_cluster_{image_to_predict_path}.png')
+    # fig.savefig(f'predicted_cluster_{image_to_predict_path}.png')
     # fig.savefig()
 
 
