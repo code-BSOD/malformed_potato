@@ -63,3 +63,9 @@ Classes: Good, Bottleneck, Ugly
 | Min SE     | 1.36 | 2.22       | 1.85 |
 | Avg SE     | 1.79 | 2.49       | 2.28 |
 | Median SE  | 1.76 | 2.49       | 2.23 |
+
+
+
+# For Fourier Based Prediction
+Uset the `malform_prediction_final.py` file for prediction. Example use cases inside the file
+Basically this file will return which cluster a single image belongs to with the `prediction_cluster_value(self, image_path, order=30)` method. It also gives you the ability to plot the potato and the shape that was detected using the `plot_predicted_clusters(self, predicted_cluster, avg_shape, image_to_predict_path)` method.
