@@ -7,12 +7,14 @@ from pyefd import elliptic_fourier_descriptors
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import pickle
+import time
 
 
 class MalformPrediction:
     """
     Class to predict if a contour of the potatois a malformation or not.
 
+    Private Methods:
     1. __init__: Load the KMeans model.
     2. __read_images_and_extract_contours_single_image: Read images from a folder and extract their largest external contour.
     3. __normalize_contour_points: Normalize contour points to a fixed number for consistency.
@@ -20,10 +22,17 @@ class MalformPrediction:
     5. __compute_class_averages: Compute average Fourier coefficients for each cluster.
     6. __inverse_fourier_transform: Reconstruct a shape from its Fourier coefficients.
 
+    Public Methods:
+
     7. predict_cluster: Predicts the cluster for a single image and returns its label and average shape. Useful for plotting.
     8. plot_predicted_clusters: Plot the input image and the average shape of the predicted cluster.
-
     9. prediction_cluster_value: Predicts the cluster for a single image and returns its label no only and it should be used to select & deselect malformed/good potatoes.
+    
+    Usage:
+    1. For predicting the cluster value of a single image: use the prediction_cluster_value method.
+    2. For plotting the input image and the average shape of the pototo: use the plot_predicted_clusters method.
+    
+    * Reason we've +1 for the cluster is because clusters starts at 0. So, to match the cluster number with the cluster label, we've added +1.
     """
 
     def __init__(self, model_location: str):
@@ -114,15 +123,54 @@ class MalformPrediction:
 
     def prediction_cluster_value(self, image_path, order=30):
         """Predicts the cluster for a single image and returns its label no only."""
+        
         self.contour = self.__read_images_and_extract_contours_single_image([image_path])[0]
         self.fourier_coeffs = self.__compute_fourier_coefficients(self.contour, order=order).flatten()
+
+        start_time = time.perf_counter()
         self.cluster_label = self.kmeans.predict([self.fourier_coeffs])[0]
-        self.class_averages = self.__compute_class_averages([self.fourier_coeffs], [self.cluster_label], self.kmeans.n_clusters) # Compute the average shape for the cluster
-        self.avg_shape = self.__inverse_fourier_transform(self.class_averages[self.cluster_label].reshape(order, -1), H=order) # Reconstruct the average shape
+        end_time = time.perf_counter()
+
+        execution_time_seconds = end_time - start_time
+        execution_time_milliseconds = execution_time_seconds * 1000
+        print(f"Execution time for prediction_cluster_value: {execution_time_milliseconds:.2f} milliseconds")
+
+        # self.class_averages = self.__compute_class_averages([self.fourier_coeffs], [self.cluster_label], self.kmeans.n_clusters) # Compute the average shape for the cluster
+        # self.avg_shape = self.__inverse_fourier_transform(self.class_averages[self.cluster_label].reshape(order, -1), H=order) # Reconstruct the average shape
         return self.cluster_label + 1 # only returns cluster value with +1 to match the cluster number with the cluster label
+    
+
+    # def measure_prediction_time(self, image_path, order=30):
+    #     """
+    #     This method wraps the prediction_cluster_value method and measures its execution time.
+    #     """
+    #     start_time = time.perf_counter()
+    #     cluster_label = self.prediction_cluster_value(image_path, order=order)
+    #     end_time = time.perf_counter()
+    #     execution_time_seconds = end_time - start_time
+    #     execution_time_milliseconds = execution_time_seconds * 1000
+    #     print(f"Execution time for prediction_cluster_value: {execution_time_milliseconds:.2f} milliseconds")
+    #     return cluster_label
 
 
 # Example usage of the MalformPrediction class
 malform_predictor = MalformPrediction('kmeans_model.pkl')
-image_to_predict_path = '/home/mishkat/Documents/malformed_potato/potato_good_malformed/malformed_potatoes_fourier_3_class/bottleneck/sd_malformed_12_2_1_100_10.png'
-print(malform_predictor.prediction_cluster_value(image_to_predict_path))  # Predict cluster value
+#Reference Image
+# image_to_predict_path = '/home/mishkat/Documents/malformed_potato/potato_good_malformed/malformed_potatoes_fourier_3_class/bottleneck/sd_malformed_12_2_1_100_10.png'
+
+# 20ms
+# image_to_predict_path = '/home/mishkat/Documents/malformed_potato/potato_good_malformed/malformed_potatoes_fourier_2_class_gray/good/Afra_12_2_1_102_4.png'
+
+image_to_predict_path = 'potato_good_malformed/malformed_potatoes_fourier_2_class_gray/good/Afra_12_2_1_104_7.png'
+
+print(malform_predictor.prediction_cluster_value(image_to_predict_path))
+
+# Predict the cluster for the input image
+# print(malform_predictor.prediction_cluster_value(image_to_predict_path))
+
+
+
+
+# Example usage with timing
+
+# print(malform_predictor.measure_prediction_time(image_to_predict_path))
