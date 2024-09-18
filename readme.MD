@@ -69,3 +69,19 @@ Classes: Good, Bottleneck, Ugly
 # For Fourier Based Prediction
 Uset the `malform_prediction_final.py` file for prediction. Example use cases inside the file
 Basically this file will return which cluster a single image belongs to with the `prediction_cluster_value(self, image_path, order=30)` method. It also gives you the ability to plot the potato and the shape that was detected using the `plot_predicted_clusters(self, predicted_cluster, avg_shape, image_to_predict_path)` method.
+
+
+# Fourier with Shape Value Results
+
+| Type/Data    	| Min   	| Max   	| Avg   	| Std  	| Mode  	|
+|--------------	|-------	|-------	|-------	|------	|-------	|
+| Very Gingery 	| 34.75 	| 57.94 	| 43.93 	| 7.79 	| 38.8  	|
+| Heart        	| 27.22 	| 56.44 	| 46.69 	| 8.1  	| 49.89 	|
+| Good         	| 9.73  	| 27.17 	| 17.33 	| 3.74 	| 18.98 	|
+| Gingery      	| 24.08 	| 49.19 	| 35.17 	| 7.25 	| 32.14 	|
+| Bottleneck   	| 21.11 	| 52.08 	| 36.33 	| 6.71 	| 28.89 	|
+| Bobble       	| 22.97 	| 50.10 	| 36.10 	| 6.7  	| 28.89 	|
+
+## Reasoning
+* The results that Tao got was based on number of edges. The more unusal edges, the higher the score.
+* The formula seems to work as we get small values for good shaped potatoes.
