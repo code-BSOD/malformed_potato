@@ -85,3 +85,29 @@ Basically this file will return which cluster a single image belongs to with the
 ## Reasoning
 * The results that Tao got was based on number of edges. The more unusal edges, the higher the score.
 * The formula seems to work as we get small values for good shaped potatoes.
+
+## Visual Distributions
+
+### Heart Shape Potatoes
+![Heart](5_classes_malformed/heart/sd_malformed_12_2_2_464_11.png)
+![For Heart Shape Images](heart_distributions.png "Title")
+
+### Good Shape Potatoes
+![Good](5_classes_malformed/good/Afra_12_2_1_102_6.png)
+![For Good Shape](good_distributions.png)
+
+### Gingery Shape
+![Ginger](5_classes_malformed/gingery/sd_malformed_12_2_4_304_7.png)
+![For Gingery Shape](gingery_distributions.png)
+
+### Very Gingery Shapes
+![Very Gingery](5_classes_malformed/very_gingery/sd_malformed_12_2_4_120_14.png)
+![For Very Gingery Shape](very_gingery_distributions.png)
+
+### Bottleneck Shapes
+![Bottlneck](5_classes_malformed/bottleneck/sd_malformed_12_2_1_120_0.png)
+![For Bottleneck Shape](bottleneck_distributions.png)
+
+### Bobble Shapes
+![Bobble](5_classes_malformed/bobble/sd_malformed_12_2_2_444_6.png)
+![For Bobble Shape](bobble_distributions.png)
