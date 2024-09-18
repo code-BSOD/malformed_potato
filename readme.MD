@@ -85,6 +85,8 @@ Basically this file will return which cluster a single image belongs to with the
 ## Reasoning
 * The results that Tao got was based on number of edges. The more unusal edges, the higher the score.
 * The formula seems to work as we get small values for good shaped potatoes.
+* Tao was getting better results because most of the samples had many edges
+![Tao](tao.png)
 
 ## Visual Distributions
 
